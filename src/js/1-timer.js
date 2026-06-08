@@ -1,5 +1,7 @@
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
+import iziToast from 'izitoast';
+import 'izitoast/dist/css/iziToast.min.css';
 
 const datetimePicker = document.getElementById('datetime-picker');
 const startButton = document.querySelector('[data-start]');
@@ -43,7 +45,8 @@ function stopTimer() {
     clearInterval(timerInterval);
     timerInterval = null;
   }
-  startButton.disabled = false;
+  // Кнопка старту залишається вимкненою після завершення
+  startButton.disabled = true;
   datetimePicker.disabled = false;
 }
 
@@ -54,11 +57,9 @@ function startTimer() {
   datetimePicker.disabled = true;
 
   timerInterval = setInterval(() => {
-    const now = Date.now();
-    const remainingTime = selectedDate - now;
+    const remainingTime = selectedDate - Date.now();
 
     if (remainingTime <= 0) {
-      // Таймер достиг нуля
       stopTimer();
       updateTimerUI({ days: 0, hours: 0, minutes: 0, seconds: 0 });
       return;
@@ -69,37 +70,30 @@ function startTimer() {
   }, 1000);
 }
 
-const options = {
+flatpickr(datetimePicker, {
   enableTime: true,
   time_24hr: true,
   defaultDate: new Date(),
   minuteIncrement: 1,
   onClose(selectedDates) {
-    console.log(selectedDates[0]);
-
-    if (selectedDates[0]) {
-      const selectedDateMs = selectedDates[0].getTime();
-      const now = Date.now();
-
-      if (selectedDateMs <= now) {
-        window.alert('Please choose a date in the future');
-        startButton.disabled = true;
-        selectedDate = null;
-      } else {
-        selectedDate = selectedDateMs;
-        startButton.disabled = false;
-      }
+    if (selectedDates[0] && selectedDates[0].getTime() > Date.now()) {
+      selectedDate = selectedDates[0].getTime();
+      startButton.disabled = false;
+    } else if (selectedDates[0] && selectedDates[0].getTime() <= Date.now()) {
+      // Використовуємо iziToast замість alert
+      iziToast.warning({
+        title: '⚠️ Invalid Date',
+        message: 'Please choose a date in the future',
+        position: 'topRight',
+        timeout: 3000,
+      });
+      startButton.disabled = true;
+      selectedDate = null;
     } else {
       startButton.disabled = true;
       selectedDate = null;
     }
   },
-};
-
-flatpickr(datetimePicker, options);
+});
 
 startButton.addEventListener('click', startTimer);
-
-import iziToast from 'izitoast';
-
-import 'izitoast/dist/css/iziToast.min.css';
