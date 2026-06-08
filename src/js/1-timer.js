@@ -82,7 +82,7 @@ flatpickr(datetimePicker, {
       startButton.disabled = false;
     } else if (selectedDates[0] && selectedDates[0].getTime() <= Date.now()) {
       iziToast.error({
-        title: '❌ Error',
+        // title: '❌ Error',
         message: 'Please choose a date in the future',
         position: 'topRight',
         timeout: 3000,
