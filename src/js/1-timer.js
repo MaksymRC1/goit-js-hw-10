@@ -82,9 +82,9 @@ flatpickr(datetimePicker, {
       startButton.disabled = false;
     } else if (selectedDates[0] && selectedDates[0].getTime() <= Date.now()) {
       // Використовуємо iziToast замість alert
-      iziToast.warning({
-        title: '❌ Invalid date',
-        message: 'Please choose a date in the future',
+      iziToast.error({
+        title: '❌ Помилка',
+        message: 'Будь ласка, виберіть дату в майбутньому',
         position: 'topRight',
         timeout: 3000,
       });
