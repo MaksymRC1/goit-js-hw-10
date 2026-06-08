@@ -45,9 +45,9 @@ function stopTimer() {
     clearInterval(timerInterval);
     timerInterval = null;
   }
-  // Кнопка старту залишається вимкненою
+
   startButton.disabled = true;
-  // Тільки датапікер стає активним
+
   datetimePicker.disabled = false;
 }
 
@@ -81,7 +81,6 @@ flatpickr(datetimePicker, {
       selectedDate = selectedDates[0].getTime();
       startButton.disabled = false;
     } else if (selectedDates[0] && selectedDates[0].getTime() <= Date.now()) {
-      // Використовуємо iziToast замість alert
       iziToast.error({
         title: '❌ Помилка',
         message: 'Будь ласка, виберіть дату в майбутньому',
